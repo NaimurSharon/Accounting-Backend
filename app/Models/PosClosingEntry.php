@@ -60,4 +60,19 @@ class PosClosingEntry extends Model
     {
         return $this->hasMany(PosClosingEntryTaxes::class, 'parent_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function posProfile()
+    {
+        return $this->belongsTo(PosProfile::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

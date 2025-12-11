@@ -102,6 +102,22 @@ class JournalEntry extends Model
         return $this->belongsTo(Company::class);
     }
 
+    // Scopes
+    public function scopePosted($query)
+    {
+        return $query->where('docstatus', 1);
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('docstatus', 2);
+    }
+
+    public function scopeDraft($query)
+    {
+        return $query->where('docstatus', 0);
+    }
+
     public function financeBook()
     {
         return $this->belongsTo(FinanceBook::class); // Placeholder needed?

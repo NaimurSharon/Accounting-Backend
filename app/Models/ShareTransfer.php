@@ -44,5 +44,26 @@ class ShareTransfer extends Model
         'date' => 'date',
         'rate' => 'decimal:2',
         'amount' => 'decimal:2',
+        'no_of_shares' => 'decimal:2', // Added cast
     ];
+
+    public function fromShareholder()
+    {
+        return $this->belongsTo(Shareholder::class, 'from_shareholder_id');
+    }
+
+    public function toShareholder()
+    {
+        return $this->belongsTo(Shareholder::class, 'to_shareholder_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function shareType()
+    {
+        return $this->belongsTo(ShareType::class);
+    }
 }

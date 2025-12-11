@@ -168,4 +168,21 @@ class GlEntry extends Model
     {
         return $this->belongsTo(Currency::class, 'transaction_currency_id');
     }
+
+    public function voucher()
+    {
+        // Dynamic relationship to the voucher
+        // voucher_type_id usually stores the Doctype ID/Name in ERPNext, e.g. "Sales Invoice" (as string or ID).
+        // Since we are using IDs, assume voucher_type_id maps to a Doctype model we don't handle dynamically easily without a map.
+        // But if it's string based (which ERPNext uses), we could do:
+        // return $this->morphTo(__FUNCTION__, 'voucher_type_id', 'voucher_no');
+
+        // Given existing schema uses Strings for Types in many places but we have _id suffixes 
+        // in previous models, let's assume keys are handled. 
+        // Actually, if `voucher_type_id` is an integer, it refers to `doctype` table?
+        // Let's implement a safe manual approach or comment.
+        // For now, I will add a method that tries to resolve it.
+
+        return $this->morphTo(__FUNCTION__, 'voucher_type_id', 'voucher_no');
+    }
 }

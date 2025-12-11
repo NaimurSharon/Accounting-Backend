@@ -38,4 +38,9 @@ class Shareholder extends Model
     {
         return $this->hasMany(ShareBalance::class, 'parent_id');
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

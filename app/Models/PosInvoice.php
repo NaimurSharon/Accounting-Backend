@@ -175,6 +175,16 @@ class PosInvoice extends Model
         $this->attributes['is_opening'] = $value ? 'Yes' : 'No';
     }
 
+    public function isPaid()
+    {
+        return $this->outstanding_amount <= 0;
+    }
+
+    public function isOverdue()
+    {
+        return !$this->isPaid() && $this->due_date < now();
+    }
+
 
     public function company()
     {

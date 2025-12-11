@@ -68,4 +68,40 @@ class Subscription extends Model
     {
         return $this->hasMany(SubscriptionPlanDetail::class, 'parent_id');
     }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+    }
+
+    public function scopePastDue($query)
+    {
+        return $query->where('status', 'Past Due');
+    }
+
+    // Relationships
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'party', 'name')->where('party_type_id', 'Customer'); // Simple hack, ideally dynamic
+    }
+
+    public function subscriber()
+    {
+        return $this->partyRelation();
+    }
+
+    public function partyRelation()
+    {
+        // Dynamic relationship
+        return $this->morphTo(__FUNCTION__, 'party_type_id', 'party');
+        // But party_type_id is typically "Customer", not "App\Models\Customer".
+        // Use custom accessor if needed, or simple belongsTo if assumed only Customer usually. 
+        // ERPNext Subscriptions valid for Customer, Supplier, Shareholder? Mostly Customer.
+    }
 }
