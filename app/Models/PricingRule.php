@@ -130,4 +130,32 @@ class PricingRule extends Model
     {
         return $this->hasMany(PricingRuleItemGroup::class, 'parent_id');
     }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('disable', 0);
+    }
+
+    public function scopeValidDate($query, $date = null)
+    {
+        $date = $date ?: now();
+        return $query->where(function ($q) use ($date) {
+            $q->where('valid_from', '<=', $date)
+                ->orWhereNull('valid_from');
+        })->where(function ($q) use ($date) {
+            $q->where('valid_upto', '>=', $date)
+                ->orWhereNull('valid_upto');
+        });
+    }
+
+    public function scopeSelling($query)
+    {
+        return $query->where('selling', 1);
+    }
+
+    public function scopeBuying($query)
+    {
+        return $query->where('buying', 1);
+    }
 }

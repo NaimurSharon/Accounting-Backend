@@ -53,4 +53,47 @@ class TaxRule extends Model
         'to_date' => 'date',
         'use_for_shopping_cart' => 'boolean',
     ];
+    // Scopes
+    public function scopeValidDate($query, $date = null)
+    {
+        $date = $date ?: now();
+        return $query->where(function ($q) use ($date) {
+            $q->where('from_date', '<=', $date)
+                ->orWhereNull('from_date');
+        })->where(function ($q) use ($date) {
+            $q->where('to_date', '>=', $date)
+                ->orWhereNull('to_date');
+        });
+    }
+
+    public function scopeForCustomer($query, $customerId)
+    {
+        return $query->where('customer_id', $customerId)->orWhereNull('customer_id');
+    }
+
+    public function scopeForSupplier($query, $supplierId)
+    {
+        return $query->where('supplier_id', $supplierId)->orWhereNull('supplier_id');
+    }
+
+    public function scopeForItem($query, $itemId)
+    {
+        return $query->where('item_id', $itemId)->orWhereNull('item_id');
+    }
+
+    // Relationships
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function salesTaxTemplate()
+    {
+        return $this->belongsTo(SalesTaxesAndChargesTemplate::class, 'sales_tax_template_id');
+    }
+
+    public function purchaseTaxTemplate()
+    {
+        return $this->belongsTo(PurchaseTaxesAndChargesTemplate::class, 'purchase_tax_template_id');
+    }
 }

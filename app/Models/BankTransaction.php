@@ -71,4 +71,32 @@ class BankTransaction extends Model
     {
         return $this->hasMany(BankTransactionPayments::class, 'parent_id');
     }
+
+    /**
+     * Dynamic relationship to the party (Customer, Supplier, etc.)
+     */
+    public function partyRelation()
+    {
+        $model = 'App\\Models\\' . $this->party_type;
+        if (class_exists($model)) {
+            return $this->belongsTo($model, 'party', 'name');
+        }
+        return null;
+    }
+
+    // Helpers
+    public function isDeposit()
+    {
+        return $this->deposit > 0;
+    }
+
+    public function isWithdrawal()
+    {
+        return $this->withdrawal > 0;
+    }
+
+    public function scopeUnreconciled($query)
+    {
+        return $query->where('unallocated_amount', '>', 0);
+    }
 }

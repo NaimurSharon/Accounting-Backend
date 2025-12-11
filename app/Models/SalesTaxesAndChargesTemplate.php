@@ -34,6 +34,21 @@ class SalesTaxesAndChargesTemplate extends Model
         'disabled' => 'boolean',
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('disabled', 0);
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('is_default', 1);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function taxesRelation()
     {
         return $this->hasMany(SalesTaxesAndCharges::class, 'parent_id');
